@@ -25,6 +25,18 @@ class NTLM(threading.Thread):
 			sys.exit(e)
 
 	def NTLModel(self, q):
+		"""
+		This function will handle the attack.
+		
+		Parameters
+		----
+			self : The self parameter is used to manage the supervariables
+			q : It's the wordlist for bruteforce hash NTLM.
+			
+		Return
+		----
+		Be he will return the password or nothing.
+		"""
 		while True:
 			qet = q.get()
 			if(self.NTLM.islower() == False):
@@ -35,8 +47,8 @@ class NTLM(threading.Thread):
 				print "\n[+] NTLM : %s:%s\n" %(self.NTLM, qet)
 				sys.exit(0)
 			else:
-				print "[-] Error NTLM hashs : %s" %(qet)
-
+				print "[-] ERROR NTLM/1000 : %s:%s" %(self.NTLM, qet)
+				
 	def run(self):
 		"""
 		This function will handle
