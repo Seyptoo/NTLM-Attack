@@ -8,7 +8,7 @@ import Queue
 import time
 
 class NTLM(threading.Thread):
-	def __init__(self, system_threads=35):
+	def __init__(self, system_threads=30):
 		threading.Thread.__init__(self)
 		self.threads = system_threads
 		# Calling Thread variable.
@@ -24,14 +24,18 @@ class NTLM(threading.Thread):
 		except IndexError as e:
 			sys.exit(e)
 
-	def NTLModel(self, q, transfert_file):
+	def NTLModel(self, q):
 		while True:
+			qet = q.get()
 			if(self.NTLM.islower() == False):
 				self.NTLM = self.NTLM.lower()
 
-			hash = hashlib.new('md4', q.get().encode('utf-16le')).digest()
+			hash = hashlib.new('md4', qet.encode('utf-16le')).digest()
 			if(binascii.hexlify(hash) == self.NTLM):
-				pass
+				print "\n[+] NTLM : %s:%s\n" %(self.NTLM, qet)
+				sys.exit(0)
+			else:
+				print "[-] Error NTLM hashs : %s" %(qet)
 
 	def run(self):
 		"""
@@ -42,10 +46,9 @@ class NTLM(threading.Thread):
 		if(self.LIST):
 			q = Queue.Queue()
 			with open(self.LIST, "r") as files:
-				transfert_file = files.readlines()
 				for online in files:
-					q.put(online.strip("\n\r"))
-				self.NTLModel(q, transfert_file)		
+					q.put(online.rstrip("\n\r"))
+				self.NTLModel(q)	
 
 			for i in range(int(self.threads)):
 				wrapper = threading.Thread(target=self.NTLModel, args=(i, q))
@@ -54,6 +57,7 @@ class NTLM(threading.Thread):
 				wrapper.join(600)
 
 			q.join()
+		
 
 if __name__ == "__main__":
 	NTLM().start()
