@@ -24,15 +24,14 @@ class NTLM(threading.Thread):
 		except IndexError as e:
 			sys.exit(e)
 
-	def NTLModel(self, q):
+	def NTLModel(self, q, transfert_file):
 		while True:
 			if(self.NTLM.islower() == False):
 				self.NTLM = self.NTLM.lower()
 
 			hash = hashlib.new('md4', q.get().encode('utf-16le')).digest()
 			if(binascii.hexlify(hash) == self.NTLM):
-				print "Cracked : %s" %(q.get())
-
+				pass
 
 	def run(self):
 		"""
@@ -42,10 +41,11 @@ class NTLM(threading.Thread):
 		"""
 		if(self.LIST):
 			q = Queue.Queue()
-			with open(self.LIST, "r") as file:
-				for online in file:
+			with open(self.LIST, "r") as files:
+				transfert_file = files.readlines()
+				for online in files:
 					q.put(online.strip("\n\r"))
-				self.NTLModel(q)		
+				self.NTLModel(q, transfert_file)		
 
 			for i in range(int(self.threads)):
 				wrapper = threading.Thread(target=self.NTLModel, args=(i, q))
@@ -54,7 +54,6 @@ class NTLM(threading.Thread):
 				wrapper.join(600)
 
 			q.join()
-		
 
 if __name__ == "__main__":
 	NTLM().start()
