@@ -1,4 +1,4 @@
-#coding:utf
+#coding:utf-8
 
 import sys
 import hashlib
@@ -42,13 +42,10 @@ class NTLM(threading.Thread):
 			if(self.NTLM.islower() == False):
 				self.NTLM = self.NTLM.lower()
 
-			HASH = hashlib.new('md4', qet.encode('utf-16le')).digest()
-			# The attack will be launched at that moment.
-			if(binascii.hexlify(HASH) == self.NTLM):
-				print "\n[+] NTLM : %s:%s\n" %(self.NTLM, qet), sys.exit(0)
-			else:
-				print "[-] ERROR NTLM/1000 : %s:%s" %(self.NTLM, qet)
-				
+					HASH = hashlib.new('md4', qet.encode('utf-16le')).digest()
+					if(binascii.hexlify(HASH) == self.NTLM):
+						sys.exit("[+] NTLM : %s:%s" %(self.NTLM, qet))
+
 	def run(self):
 		"""
 		This function will handle
@@ -73,3 +70,4 @@ class NTLM(threading.Thread):
 
 if __name__ == "__main__":
 	NTLM().start()
+	
